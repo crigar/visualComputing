@@ -40,7 +40,7 @@ La rasterización de puntos se hizo a partir de la guía presentada en el primer
 
 Este es el resultado:
 
-![Resultados](raster_ws/images/result.jpg)
+![Resultados](raster_ws/images/result.JPG)
 
 ## Entrega
 
