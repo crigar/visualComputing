@@ -24,9 +24,9 @@ Uno, o máximo dos si van a realizar al menos un opcional.
 
 Complete la tabla:
 
-| Integrante | github nick |
-|------------|-------------|
-|            |             |
+| Integrante      | github nick |
+|-----------------|-------------|
+| Cristian Garcia |    Crigar   |
 
 ## Entrega
 
