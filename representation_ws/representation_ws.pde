@@ -66,18 +66,29 @@ void setup() {
   scene.setFieldOfView(PI / 3);
   scene.fitBall();
   // create and fill the list of boids
-  //PShape boidShape =  createBoidShapeVV();
-  PShape boidShape =  createBoidShapeFV();
+  ArrayList<Vertex> objectVV = createObjectVV();
+  ArrayList<Face> objectFV = createObjectFV();
+  //introducir tipo de representacion: VV o FV
+  PShape boidShape = representation("FV");
   flock = new ArrayList();
   for (int i = 0; i < initBoidNum; i++)
-    //flock.add(new Boid(new Vector(flockWidth / 2, flockHeight / 2, flockDepth / 2), boidShape, "immediate" ));
-    flock.add(new Boid(new Vector(flockWidth / 2, flockHeight / 2, flockDepth / 2), boidShape, "retained" ));
+    //flock.add(new Boid(new Vector(flockWidth / 2, flockHeight / 2, flockDepth / 2), boidShape, "immediate", "VV", objectVV, null  ));
+    flock.add(new Boid(new Vector(flockWidth / 2, flockHeight / 2, flockDepth / 2), boidShape, "retained", null, null, null));
   
   
 }
 
-PShape createBoidShapeVV(){
-  ArrayList<Vertex> object = createObjectVV();
+PShape representation(String representation){
+  if(representation == "VV"){
+    ArrayList<Vertex> objectVV = createObjectVV();
+    return createBoidShapeVV(objectVV);
+  }else{
+    ArrayList<Face> objectFV = createObjectFV();
+    return createBoidShapeFV(objectFV);
+  }
+}
+
+PShape createBoidShapeVV(ArrayList<Vertex> object){
   PShape boidShape = createShape();
   boidShape.beginShape(TRIANGLES);
   for (int i = 0; i < object.size(); i++){
@@ -92,8 +103,7 @@ PShape createBoidShapeVV(){
 }
 
 
-PShape createBoidShapeFV(){
-  ArrayList<Face> object = createObjectFV();
+PShape createBoidShapeFV(ArrayList<Face> object){
   PShape boidShape = createShape();
   boidShape.beginShape(TRIANGLES);
   for (int i = 0; i < object.size(); i++){
@@ -288,35 +298,59 @@ float bez7(float u, int k){
   return 0;
 }
 
+float h0(float t){  
+  return (float )(2 * Math.pow(t,3) - 3 * Math.pow(t,2) + 1 ); 
+}
+float h1(float t){  
+  return (float )( Math.pow(t,3) - 2 * Math.pow(t,2) + t ); 
+}
 
+float h2(float t){  
+  return (float )(-2 * Math.pow(t,3) + 3 * Math.pow(t,2)); 
+}
 
-void draw() {
-  background(10, 50, 25);
-  ambientLight(128, 128, 128);
-  directionalLight(255, 255, 255, 0, 1, -100);
-  walls();
-  scene.traverse();
-  // uncomment to asynchronously update boid avatar. See mouseClicked()
-  // updateAvatar(scene.trackedFrame("mouseClicked"));
+float h3(float t){  
+  return (float )(Math.pow(t,3) -  Math.pow(t,2)); 
+}
+
+float mx(Boid[] vec, int i){  
+  return  vec[i+1].position.x() - vec[i-1].position.x() * 0.5 ; 
+}
+float my(Boid[] vec, int i){  
+  return  vec[i+1].position.y() - vec[i-1].position.y() * 0.5 ; 
+}
+float mz(Boid[] vec, int i){  
+  return  vec[i+1].position.z() - vec[i-1].position.z() * 0.5 ; 
+}
+
+void bezie(float u){
   
-  for (float u = 0; u < 1; u = u + 0.01){
-      //float x = flock.get(p0).position.x() * bez3(u, 0) +
-      //           flock.get(p1).position.x() * bez3(u, 1)   + 
-      //           flock.get(p2).position.x() * bez3(u, 2)  + 
-      //           flock.get(p3).position.x() * bez3(u, 3);
-                 
-      //float y = flock.get(p0).position.y() * bez3(u, 0) +
-      //           flock.get(p1).position.y() * bez3(u, 1)   + 
-      //           flock.get(p2).position.y() * bez3(u, 2)  + 
-      //           flock.get(p3).position.y() * bez3(u, 3);
-                 
-      //float z = flock.get(p0).position.z() * bez3(u, 0) +
-      //           flock.get(p1).position.z() * bez3(u, 1)   + 
-      //           flock.get(p2).position.z() * bez3(u, 2)  + 
-      //           flock.get(p3).position.z() * bez3(u, 3);
-      
-      
-      
+}
+
+void bezier(int grade){
+  if( grade == 3){
+    for (float u = 0; u < 1; u = u + 0.01){
+        float x = flock.get(p0).position.x() * bez3(u, 0) +
+                   flock.get(p1).position.x() * bez3(u, 1)   + 
+                   flock.get(p2).position.x() * bez3(u, 2)  + 
+                   flock.get(p3).position.x() * bez3(u, 3);
+                   
+        float y = flock.get(p0).position.y() * bez3(u, 0) +
+                   flock.get(p1).position.y() * bez3(u, 1)   + 
+                   flock.get(p2).position.y() * bez3(u, 2)  + 
+                   flock.get(p3).position.y() * bez3(u, 3);
+                   
+        float z = flock.get(p0).position.z() * bez3(u, 0) +
+                   flock.get(p1).position.z() * bez3(u, 1)   + 
+                   flock.get(p2).position.z() * bez3(u, 2)  + 
+                   flock.get(p3).position.z() * bez3(u, 3);
+        
+        strokeWeight(3);
+        stroke(63,95,138);
+        point(x, y, z);
+    }
+  }else{
+    for (float u = 0; u < 1; u = u + 0.01){
         float x = flock.get(p0).position.x() * bez7(u, 0) +
                   flock.get(p1).position.x() * bez7(u, 1) + 
                   flock.get(p2).position.x() * bez7(u, 2) + 
@@ -346,10 +380,59 @@ void draw() {
                   flock.get(p7).position.z() * bez7(u, 7);
                   
         
-        strokeWeight(5);
+        strokeWeight(3);
+        stroke(63,95,138);
         point(x, y, z);
+    }
+  }
+    
+}
+
+void hermit(int grade){
+  Boid[] vec;
+  if( grade == 3){
+    vec = new Boid[4];
+    vec[0] = flock.get(p0);
+    vec[1] = flock.get(p1);
+    vec[2] = flock.get(p2);
+    vec[3] = flock.get(p3);
+  }else{
+    vec = new Boid[8];
+    vec[0] = flock.get(p0);
+    vec[1] = flock.get(p1);
+    vec[2] = flock.get(p2);
+    vec[3] = flock.get(p3);
+    vec[4] = flock.get(p4);
+    vec[5] = flock.get(p5);
+    vec[6] = flock.get(p6);
+    vec[7] = flock.get(p7);
   }
   
+  for(int i= 1; i <  vec.length - 2;i++){
+     for (float u = 0; u < 1; u = u + 0.01){
+       float x = h0(u) * flock.get(i).position.x() + h1(u) * mx(vec, i) + h2(u)* flock.get(i + 1).position.x() + h3(u) * mx(vec, i+1); 
+       float y = h0(u) * flock.get(i).position.y() + h1(u) * my(vec, i) + h2(u)* flock.get(i + 1).position.y() + h3(u) * my(vec, i+1); 
+       float z = h0(u) * flock.get(i).position.z() + h1(u) * mz(vec, i) + h2(u)* flock.get(i + 1).position.z() + h3(u) * mz(vec, i+1); 
+       
+       strokeWeight(3);
+       stroke(255,0,0);
+       point(x, y, z);
+     }
+    }
+}
+
+void draw() {
+  background(10, 50, 25);
+  ambientLight(128, 128, 128);
+  directionalLight(255, 255, 255, 0, 1, -100);
+  walls();
+  scene.traverse();
+  // uncomment to asynchronously update boid avatar. See mouseClicked()
+  // updateAvatar(scene.trackedFrame("mouseClicked"));
+  
+  //intruducir el grado del polinomio: 3 o 7
+  bezier(7);
+  hermit(7);
 }
 
 void walls() {

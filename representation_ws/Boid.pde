@@ -2,6 +2,9 @@ class Boid {
   public Frame frame;
   // fields
   String typeRender;
+  String representation;
+  ArrayList<Vertex> objectVV;
+  ArrayList<Face> objectFV;
   PShape boidShape;
   Vector position, velocity, acceleration, alignment, cohesion, separation; // position, velocity, and acceleration in
   // a vector datatype
@@ -12,11 +15,14 @@ class Boid {
   float flap = 0;
   float t = 0;
 
-  Boid(Vector inPos, PShape boidShape, String typeRender) {
+  Boid(Vector inPos, PShape boidShape, String typeRender, String representation, ArrayList<Vertex> objectVV, ArrayList<Face> objectFV ) {
     position = new Vector();
     position.set(inPos);
     this.boidShape = boidShape; 
     this.typeRender = typeRender;
+    this.representation = representation;
+    this.objectVV = objectVV;
+    this.objectFV = objectFV;
     frame = new Frame(scene) {
       // Note that within visit() geometry is defined at the
       // frame local coordinate system.
@@ -158,39 +164,35 @@ class Boid {
 
     //draw boid
     if(typeRender == "immediate"){
-            beginShape(TRIANGLES);
-            vertex(3 * sc, 0, 0);
-            vertex(-3 * sc, 2 * sc, 0);
-            vertex(-3 * sc, -2 * sc, 0);
         
-            vertex(3 * sc, 0, 0);
-            vertex(-3 * sc, 2 * sc, 0);
-            vertex(-3 * sc, 0, 2 * sc);
+        if(representation == "VV"){
+          PShape boidShape = createShape();
+          boidShape.beginShape(TRIANGLES);
+          for (int i = 0; i < objectVV.size(); i++){
+            ArrayList<Vertex> adjacentVertices = objectVV.get(i).getAdjacentVertices();
+            for (int j = 0; j < adjacentVertices.size() ; j++){
+              Vertex adjacentVertex = adjacentVertices.get(j);
+              boidShape.vertex(adjacentVertex.getCoordinates()[0], adjacentVertex.getCoordinates()[1], adjacentVertex.getCoordinates()[2]);
+            }
+          }
+          boidShape.endShape();
+          shape(boidShape);
+        }else{
+          PShape boidShape = createShape();
+          boidShape.beginShape(TRIANGLES);
+          for (int i = 0; i < objectFV.size(); i++){
+            ArrayList<Vertex> adjacentVertices = objectFV.get(i).getAdjacentVertices();
+            for (int j = 0; j < adjacentVertices.size() ; j++){
+              Vertex adjacentVertex = adjacentVertices.get(j);
+              boidShape.vertex(adjacentVertex.getCoordinates()[0], adjacentVertex.getCoordinates()[1], adjacentVertex.getCoordinates()[2]);
+            }
+          }
+          boidShape.endShape();
+          shape(boidShape);
+        }
+      
         
-            vertex(3 * sc, 0, 0);
-            vertex(-3 * sc, 0, 2 * sc);
-            vertex(-3 * sc, -2 * sc, 0);
-        
-            vertex(-3 * sc, 0, 2 * sc);
-            vertex(-3 * sc, 2 * sc, 0);
-            vertex(-3 * sc, -2 * sc, 0);
-            
-            
-            //--------------------------------------
-            
-            vertex(-3 * sc, 0, 2 * sc);
-            vertex((-3 * sc) * 2, 0.0, 0.0);
-            vertex(-3 * sc, 2 * sc, 0.0);
-            
-            vertex(-3 * sc, 2 * sc, 0.0);
-            vertex((-3 * sc) * 2, 0.0, 0.0);
-            vertex(-3 * sc, -2 * sc, 0.0);
-            
-            vertex(-3 * sc, -2 * sc, 0.0);
-            vertex(-3 * sc, 0.0, 2 * sc);
-            vertex((-3 * sc) * 2, 0.0, 0.0);
-            endShape();
-    }
+      }
     if(typeRender == "retained"){
       shape(boidShape);
     }
