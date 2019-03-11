@@ -6,6 +6,17 @@ import frames.processing.*;
 Scene scene;
 Maze maze;
 boolean drawAxes = true, drawShooterTarget = true, adaptive = true;
+PImage label;
+PShape sh;
+
+int xPos = 0;
+int yPos = 0;
+
+float xRot = 0;
+float yRot = 0;
+
+int xMove = 0;
+int yMove = 18;
 
 void setup() {
   size(800, 800, P3D);
@@ -18,6 +29,10 @@ void setup() {
   scene.setType(Graph.Type.ORTHOGRAPHIC);
 
   scene.fitBallInterpolation();
+  
+  
+  
+  
 }
 
 void printMaze(){
@@ -38,6 +53,7 @@ void printMaze(){
         if(i == 0){
           pushMatrix();
           translate(x, y, z);
+          fill(22,60,7);
           box(wallHeight, wallWidht, wallHeight);
           popMatrix();
         }
@@ -46,6 +62,7 @@ void printMaze(){
         if( cell.getWalls().get("top") == 1 ){
           pushMatrix();
           translate(x, y, z);
+          fill(22,60,7);
           box(wallHeight, wallWidht, wallHeight);
           popMatrix();
         }
@@ -54,6 +71,7 @@ void printMaze(){
         if( cell.getWalls().get("right") == 1 ){
           pushMatrix();
           translate(x + (wallHeight/2), y + (wallHeight/2), z);
+          fill(22,60,7);
           box(wallWidht, wallHeight, wallHeight);
           popMatrix();
         }
@@ -62,6 +80,7 @@ void printMaze(){
         if( cell.getWalls().get("bottom") == 1 ){
           pushMatrix();
           translate(x, y + wallHeight, z);
+          fill(22,60,7);
           box(wallHeight, wallWidht, wallHeight);
           popMatrix();
         }
@@ -71,16 +90,17 @@ void printMaze(){
         if( cell.getWalls().get("left") == 1 ){
           pushMatrix();
           translate(x - (wallHeight / 2), y + (wallHeight/2), z);
-          fill(255);
+          fill(22,60,7);
           box(wallWidht, wallHeight, wallHeight);
           popMatrix();
         }
         
         //floor
         
+        
         pushMatrix();
         translate(x,y + ( wallHeight/2 ), z - ( wallHeight/2 ) );
-        color(255, 204, 0);
+        fill(50, 50, 200);
         box( wallHeight, wallHeight  , wallWidht );
         popMatrix();
         
@@ -95,9 +115,9 @@ void printMaze(){
 
 void draw() {
   background(255);
-  printMaze();
+  //pointLight(200, 200, 200, 0, 0, 100);
+  printMaze(); 
   
-        
 }
 
 void mouseMoved() {
@@ -116,33 +136,37 @@ void mouseDragged() {
 void mouseWheel(MouseEvent event) {
   scene.zoom(event.getCount() * 20);
 }
-
+void mouseClicked() {
+  print(mouseX);
+}
 void keyPressed() {
-  if (key == ' ') {
-    adaptive = !adaptive;
-   
-  }
-  if (key == 'a')
-    drawAxes = !drawAxes;
-  if (key == 'p')
-    drawShooterTarget = !drawShooterTarget;
-  if (key == 'e')
-    scene.setType(Graph.Type.ORTHOGRAPHIC);
-  if (key == 'E')
-    scene.setType(Graph.Type.PERSPECTIVE);
-  if (key == 's')
-    scene.fitBallInterpolation();
-  if (key == 'S')
-    scene.fitBall();
-  if (key == 'u')
+  switch (key) {
+  case ENTER:
+    xPos = -180;
+    yPos = 40;
+    scene.eye().setPosition(new Vector(xPos,yPos,0));
+    //scene.rotate(110,0,0);
+    break;
+  case 'w':
     
-  if (key == CODED)
-    if (keyCode == UP)
-      scene.translate("keyboard", 0, -10);
-    else if (keyCode == DOWN)
-      scene.translate("keyboard", 0, 10);
-    else if (keyCode == LEFT)
-      scene.translate("keyboard", -10, 0);
-    else if (keyCode == RIGHT)
-      scene.translate("keyboard", 10, 0);
+    xPos = xPos + xMove;
+    yPos = yPos - yMove;
+    scene.eye().setPosition(new Vector(xPos,yPos,0));
+    break;
+  case 'd':
+    yRot = yRot - 0.01;
+    xMove = xMove + 1;
+    yMove = yMove - 1;
+    scene.rotate(0,yRot,0);
+    break;
+  case 's':
+    yPos = yPos + yMove;
+    scene.eye().setPosition(new Vector(xPos,yPos,0));
+    break;
+  case 'a':
+    yRot = yRot + 0.01;
+    scene.rotate(0,yRot,0);
+    break;
+  
+  }
 }
