@@ -1,30 +1,34 @@
-# Taller de shaders
+# Taller de interacción y shaders
 
-## Propósito
+## Objetivos
 
-Estudiar los [patrones de diseño de shaders](http://visualcomputing.github.io/Shaders/#/4).
+1. Estudiar las tareas universales de interacción en entornos virtuales.
+2. Estudiar los [patrones de diseño de shaders](http://visualcomputing.github.io/Shaders/#/4).
 
-## Tarea
+## Desarrollo
 
-Escoja una de las siguientes dos:
+Realizamos el taller construyendo un laberinto de 15 x 15 utilizando el algoritmo de Prim para generar aleatoriamente dicho laberinto, este algoritmo consiste en: 
+  1. Inicializar una grilla de celdas, cada con los cuatro muros.
+  2. escoger aleatoriamente una celda de los bordes de la grilla y agregar sus vecinos a una lista general de celdas vecinas
+  3. Escoger aleatoriamente una de las celdas vecinas y romper aleatoriamente un muro que conecte con un celda que ya pertenezca al laberinto y agregar a la lista las celdas vecinas. 
+  4. El algoritmo termina cuando la lista general de vecinos esté vacía, entregando así un laberinto. 
+  
+ Al finalizar la construcción del laberinto este queda como una matriz de celdas, en donde cada celda guarda la información de los muros, si existe muro arriba, a la derecha, abajo, o a la izquierda, posteriormente se recorre la matriz y los muros son representados como cajas espichadas ( box(x,y,z), en processing ). 
 
-1. Hacer un _benchmark_ entre la implementación por software y la de shaders de varias máscaras de convolución aplicadas a imágenes y video.
-2. Estudiar e implementar el [shadow mapping](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-16-shadow-mapping/). Se puede emplear la escena del [punto 2 del taller de transformaciones](https://github.com/VisualComputing/Transformations_ws), así como la librería [frames](https://github.com/VisualComputing/frames). Ver el ejemplo [ShadowMap](https://github.com/VisualComputing/frames/tree/master/examples/demos/ShadowMap).
+Es posible visualizar el laberinto desde arriba moviéndose hacia adelante y hacia atrás, también es posible entrar en el laberinto y recorrerlo desde adentro, esto lo hacemos utilizando un control de xbox conectado a la computadora. 
+
+También es posible visualizar las sombras generadas por un punto de luz que pusimos en la parte superior derecha del laberinto. 
+
+## Demo
 
 ## Integrantes
-
-Máximo tres.
 
 Complete la tabla:
 
 | Integrante | github nick |
 |------------|-------------|
-|            |             |
+|Cristian Andres Garcia            | crigar             |
+|Ivan Dario Gonzalez            | ivdgonzalezco             |
 
-## Informe
 
-(elabore en este sección un informe del ejercicio realizado)
-
-## Entrega
-
-Fecha límite Domingo 10/3/19 a las 24h.
+## Conclusiones 
