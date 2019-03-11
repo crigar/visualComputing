@@ -115,7 +115,7 @@ void printMaze(){
 
 void draw() {
   background(255);
-  //pointLight(200, 200, 200, 0, 0, 100);
+  pointLight(200, 200, 200, 0, 0, 100);
   printMaze(); 
   
 }
